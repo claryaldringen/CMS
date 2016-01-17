@@ -1,0 +1,27 @@
+parameters:
+
+php:
+    date.timezone: Europe/Prague
+    # zlib.output_compression: yes
+
+nette:
+    application:
+        errorPresenter: Error
+
+    session:
+        expiration: 14 days
+
+services:
+    routerFactory: RouterFactory
+    router: @routerFactory::createRouter
+    library: cms\Library
+    menuModel: cms\MenuModel(@dibi.connection, @library, %siteId%)
+    pageModel: cms\PageModel(@dibi.connection)
+    galleryModel: cms\GalleryModel(@dibi.connection)
+    languageModel: cms\LanguageModel(@dibi.connection)
+    articleModel: cms\ArticleModel(@dibi.connection)
+    albumModel: cms\AlbumModel(@dibi.connection)
+    commentModel: cms\CommentModel(@dibi.connection, @library)
+
+extensions:
+    dibi: Dibi\Bridges\Nette\DibiExtension22
