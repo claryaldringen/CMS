@@ -22,6 +22,7 @@ services:
     articleModel: cms\ArticleModel(@dibi.connection)
     albumModel: cms\AlbumModel(@dibi.connection)
     commentModel: cms\CommentModel(@dibi.connection, @library)
+    concertModel: cms\ConcertModel(@dibi.connection)
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22

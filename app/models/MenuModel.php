@@ -59,7 +59,7 @@ class MenuModel extends BaseModel{
 					$result = $this->search($item, $urlParts);
 					if (!empty($result)) break;
 				}
-				if(empty($result) && isset($menu['type_id']) && in_array($menu['type_id'], array(2,4))) {
+				if(empty($result) && isset($menu['type_id']) && in_array($menu['type_id'], array(2,3,4))) {
 					$result = $menu;
 					$result['path'] = $urlParts;
 				}

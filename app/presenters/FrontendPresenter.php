@@ -98,7 +98,13 @@ class FrontendPresenter extends UI\Presenter{
 	}
 
 	protected function renderArticles($item, $url) {
-		$this->data[$item['id']]['articles'] = $this->context->getService('articleModel')->setLanguage($this->languageId)->getArticles($item['id']);
+		$model = $this->context->getService('articleModel')->setLanguage($this->languageId);
+		if(empty($item['path'])) {
+			$this->data[$item['id']]['articles'] = $model->getArticles($item['id']);
+			$this->data[$item['id']]['length'] = $model->getLength($item['id']);
+		} else {
+			$this->data[$item['id']]['article'] = $model->getArticleByPath($item['path']);
+		}
 	}
 
 	protected function renderDiscography($item, $url) {

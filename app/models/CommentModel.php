@@ -16,7 +16,7 @@ class CommentModel extends BaseModel {
 	public function getComments($menuId) {
 		$rows = $this->db->query("SELECT * FROM comment WHERE menu_id=%i", $menuId)->fetchAll();
 		foreach($rows as &$row) $row['comment_id'] = (int)$row['comment_id'];
-		array_unshift($rows, new DibiRow(array('id' => 0, 'comment_id' => null)));
+		array_unshift($rows, new \Dibi\Row(array('id' => 0, 'comment_id' => null)));
 		$tree = $this->library->convertToTree($rows, 'id', 'comment_id', 'comments');
 		$tree[0]['comments'] = $this->library->removeKeys($tree[0]['comments'], 'comments');
 		return $tree[0]['comments'];

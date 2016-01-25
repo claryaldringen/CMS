@@ -16,13 +16,17 @@ class AlbumModel extends BaseModel{
 	}
 
 	public function getAlbumByPath($url) {
-		$sql = "SELECT a.id,t.text AS name,year,CONCAT(i.hash, '.', i.mime) AS file,link FROM album a
+		$sql = "SELECT
+				a.id,t.text AS name,year,CONCAT(i.hash, '.', i.mime) AS file,link,t2.text
+			FROM album a
 			JOIN name_has_text nht ON nht.name_id=a.name_id AND nht.language_id=%i
 			JOIN text t ON t.id=nht.text_id
+			JOIN name_has_text nht2 ON nht2.name_id=a.text_name_id AND nht2.language_id=%i
+			JOIN text t2 ON t2.id=nht2.text_id
 			JOIN image i ON i.id=a.image_id
 			WHERE t.url = %s";
 
-		$album = $this->db->query($sql, $this->languageId, $url)->fetch();
+		$album = $this->db->query($sql, $this->languageId, $this->languageId, $url)->fetch();
 
 		$sql = "SELECT t.text AS name,t2.text,i.hash AS file,link FROM song s
 			JOIN name_has_text nht ON nht.name_id=s.name_id AND nht.language_id=%i

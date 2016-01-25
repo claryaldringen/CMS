@@ -26,8 +26,9 @@ class AjaxPresenter extends UI\Presenter{
 	}
 
 	protected function loadArticle($data) {
-		return array_values($this->context->getService('articleModel')->setLanguage($this->languageId)->getArticles($data->menuId, $data->offset));
+		return $this->context->getService('articleModel')->setLanguage($this->languageId)->getArticles($data->menuId, $data->offset);
 	}
+
 	protected function loadComments($data) {
 		return array('comments' => $this->context->getService('commentModel')->getComments($data->menuId));
 	}
@@ -41,6 +42,21 @@ class AjaxPresenter extends UI\Presenter{
 	protected function removeComment($data) {
 		$comments = $this->context->getService('commentModel')->removeComment($data->id)->getComments($data->menuId);
 		return array('comments' => $comments);
+	}
+
+	protected function loadConcerts($data) {
+		$concerts = $this->context->getService('concertModel')->setLanguage($this->languageId)->getConcerts($data->menuId, 50, true);
+		$lastStartTime = 0;
+		foreach($concerts as $i => $concert) {
+			$startTime = strtotime($concert['start_time']);
+			$time = time();
+			if($lastStartTime < $time && $startTime > $time) {
+				$concerts[$i]['show'] = true;
+				break;
+			}
+			$lastStartTime = $startTime;
+		}
+		return array('concerts' => $concerts);
 	}
 
 }
