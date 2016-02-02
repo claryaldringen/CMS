@@ -2,6 +2,8 @@
 
 namespace cms;
 
+use Tracy\Debugger;
+
 class Html{
 
 	protected
@@ -46,6 +48,11 @@ class Html{
 
 				// use mb_strlen / mb_substr for UTF-8 support
 				if($this->totalLen > $maxLen){
+					$lastChar = '';
+					while(!in_array($lastChar, array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'))) {
+						$lastChar = mb_substr($node->nodeValue, $nodeLen - ($this->totalLen - $maxLen), 1);
+						$maxLen++;
+					}
 					$node->nodeValue = mb_substr($node->nodeValue, 0, $nodeLen - ($this->totalLen - $maxLen)) . '...';
 					$this->reachedLimit = true;
 				}

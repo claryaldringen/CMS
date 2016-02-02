@@ -15,7 +15,7 @@ class ArticleModel extends BaseModel {
 			JOIN text t ON t.id=nht.text_id
 			WHERE menu_id=%i
 			ORDER BY a.id DESC
-			LIMIT %i,4";
+			LIMIT %i,8";
 
 		$rows = $this->db->query($sql, $this->languageId, $menuId, $offset)->fetchAll();
 		$length = $this->getLength($menuId);
@@ -38,5 +38,13 @@ class ArticleModel extends BaseModel {
 			JOIN text t ON t.id=nht.text_id AND t.url=%s";
 
 		return $this->db->query($sql, $this->languageId, $url)->fetchSingle();
+	}
+
+	public function getArticleById($id) {
+		$sql = "SELECT t.text FROM article a
+			JOIN name_has_text nht ON nht.name_id=a.name_id AND nht.language_id=%i
+			JOIN text t ON t.id=nht.text_id AND a.id=%i";
+
+		return $this->db->query($sql, $this->languageId, $id)->fetchSingle();
 	}
 }

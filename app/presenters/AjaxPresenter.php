@@ -59,4 +59,8 @@ class AjaxPresenter extends UI\Presenter{
 		return array('concerts' => $concerts);
 	}
 
+	protected function loadArticleById($data) {
+		$text = $this->context->getService('articleModel')->setLanguage($this->languageId)->getArticleById($data->id);
+		return array('text' => $text);
+	}
 }
