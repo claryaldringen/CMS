@@ -49,7 +49,7 @@ class Html{
 				// use mb_strlen / mb_substr for UTF-8 support
 				if($this->totalLen > $maxLen){
 					$lastChar = '';
-					while(!in_array($lastChar, array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'))) {
+					while(!in_array($lastChar, array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z')) && $maxLen < $this->totalLen) {
 						$lastChar = mb_substr($node->nodeValue, $nodeLen - ($this->totalLen - $maxLen), 1);
 						$maxLen++;
 					}

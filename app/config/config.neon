@@ -23,6 +23,10 @@ services:
     albumModel: cms\AlbumModel(@dibi.connection)
     commentModel: cms\CommentModel(@dibi.connection, @library)
     concertModel: cms\ConcertModel(@dibi.connection)
+    mailer: Nette\Mail\SendmailMailer
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22
+
+tracy:
+    email: info@freetech.cz
