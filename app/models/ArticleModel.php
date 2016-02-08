@@ -14,7 +14,7 @@ class ArticleModel extends BaseModel {
 			JOIN name_has_text nht ON nht.name_id=a.name_id AND language_id=%i
 			JOIN text t ON t.id=nht.text_id
 			WHERE menu_id=%i
-			ORDER BY a.id DESC
+			ORDER BY a.sort ASC,a.id DESC
 			LIMIT %i,8";
 
 		$rows = $this->db->query($sql, $this->languageId, $menuId, $offset)->fetchAll();
