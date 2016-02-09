@@ -101,7 +101,7 @@ class FrontendPresenter extends UI\Presenter{
 		$model = $this->context->getService('articleModel')->setLanguage($this->languageId);
 		if(empty($item['path'])) {
 			$this->data[$item['id']]['articles'] = $model->getArticles($item['id']);
-			$this->data[$item['id']]['length'] = $model->getLength($item['id']);
+			$this->data[$item['id']]['length'] = $model->getSetting($item['id'])->length;
 		} else {
 			$this->data[$item['id']]['article'] = $model->getArticleByPath($item['path']);
 		}

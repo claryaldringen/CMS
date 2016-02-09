@@ -2,11 +2,9 @@
 
 namespace cms;
 
-use Nette\Utils\Strings;
-
 class ArticleModel extends BaseModel {
 
-	protected $lengths = array();
+	protected $setting = array();
 
 	public function getArticles($menuId, $offset = 0) {
 
@@ -15,10 +13,12 @@ class ArticleModel extends BaseModel {
 			JOIN text t ON t.id=nht.text_id
 			WHERE menu_id=%i
 			ORDER BY a.sort ASC,a.id DESC
-			LIMIT %i,8";
+			LIMIT %i,%i";
 
-		$rows = $this->db->query($sql, $this->languageId, $menuId, $offset)->fetchAll();
-		$length = $this->getLength($menuId);
+		$setting = $this->getSetting($menuId);
+
+		$rows = $this->db->query($sql, $this->languageId, $menuId, $offset, $setting->count)->fetchAll();
+		$length = $setting->length;
 		if(!empty($length)) {
 			foreach ($rows as &$row) {
 				$row->text = Html::trim($row->text, $length);
@@ -27,9 +27,12 @@ class ArticleModel extends BaseModel {
 		return $rows;
 	}
 
-	public function getLength($menuId) {
-		if(!isset($this->lengths[$menuId])) $this->lengths[$menuId] = $this->db->query("SELECT [length] FROM article_setting WHERE menu_id=%i", $menuId)->fetchSingle();
-		return $this->lengths[$menuId];
+	public function getSetting($menuId) {
+		if(empty($this->setting[$menuId])) {
+			$this->setting[$menuId] = $this->db->query("SELECT * FROM article_setting WHERE menu_id=%i", $menuId)->fetch();
+			if(empty($this->setting[$menuId])) $this->setting[$menuId] = (object)array('length' => null, 'count' => 1000);
+		}
+		return $this->setting[$menuId];
 	}
 
 	public function getArticleByPath($url) {
