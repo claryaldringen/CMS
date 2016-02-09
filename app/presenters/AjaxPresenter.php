@@ -26,7 +26,12 @@ class AjaxPresenter extends UI\Presenter{
 	}
 
 	protected function loadArticle($data) {
-		return $this->context->getService('articleModel')->setLanguage($this->languageId)->getArticles($data->menuId, $data->offset);
+		$model = $this->context->getService('articleModel')->setLanguage($this->languageId);
+		$offset = $data->offset;
+		if(empty($offset)) {
+			$offset = $model->getSetting($data->menuId)->count;
+		}
+		return $model->getArticles($data->menuId, $offset);
 	}
 
 	protected function loadComments($data) {
