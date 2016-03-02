@@ -16,7 +16,7 @@ class GalleryModel extends BaseModel{
 			JOIN [menu_has_folder] mhf ON mhf.folder_id=f.id
 			LEFT JOIN [name_has_text] nht ON f.name_id=nht.name_id AND language_id=%i
 			LEFT JOIN [text] t ON t.id=nht.text_id
-			WHERE menu_id=%i ORDER BY f.folder_id";
+			WHERE menu_id=%i ORDER BY f.sort_key";
 
 			$rows = $this->db->query($sql, $this->languageId, $menuId)->fetchAll();
 			foreach ($rows as $key => $row) {
@@ -36,7 +36,8 @@ class GalleryModel extends BaseModel{
 			FROM [image] i
 			JOIN [name_has_text] nht ON i.name_id=nht.name_id AND language_id=%i
 			JOIN [text] t ON t.id=nht.text_id
-			WHERE folder_id IN %in";
+			WHERE folder_id IN %in
+			ORDER BY i.sort_key";
 
 			$keys = array();
 			$rows = $this->db->query($sql, $this->languageId, $folderIds)->fetchAll();

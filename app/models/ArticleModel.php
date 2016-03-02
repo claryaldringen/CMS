@@ -8,6 +8,8 @@ class ArticleModel extends BaseModel {
 
 	public function getArticles($menuId, $offset = 0) {
 
+
+
 		$sql = "SELECT a.id,text,url FROM article a
 			JOIN name_has_text nht ON nht.name_id=a.name_id AND language_id=%i
 			JOIN text t ON t.id=nht.text_id
@@ -16,6 +18,7 @@ class ArticleModel extends BaseModel {
 			LIMIT %i,%i";
 
 		$setting = $this->getSetting($menuId);
+		if($offset == 0) $offset = $setting->count;
 
 		$rows = $this->db->query($sql, $this->languageId, $menuId, $offset, $setting->count)->fetchAll();
 		$length = $setting->length;
