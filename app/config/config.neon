@@ -6,7 +6,8 @@ php:
 
 nette:
     application:
-        errorPresenter: Error
+        catchExceptions: true
+        #errorPresenter: Error
 
     session:
         expiration: 14 days

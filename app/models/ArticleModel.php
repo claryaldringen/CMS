@@ -18,7 +18,6 @@ class ArticleModel extends BaseModel {
 			LIMIT %i,%i";
 
 		$setting = $this->getSetting($menuId);
-		if($offset == 0) $offset = $setting->count;
 
 		$rows = $this->db->query($sql, $this->languageId, $menuId, $offset, $setting->count)->fetchAll();
 		$length = $setting->length;
