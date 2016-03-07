@@ -2,6 +2,8 @@
 
 namespace cms;
 
+use Tracy\Debugger;
+
 class GalleryModel extends BaseModel{
 
 	protected $gallery = array();
@@ -12,11 +14,11 @@ class GalleryModel extends BaseModel{
 		if(!isset($this->gallery[$menuId])) {
 			$tree = $folderIds = array();
 
-			$sql = "SELECT f.id,f.folder_id AS parent,[text] AS name,url FROM [folder] f
+			$sql = "SELECT f.id,f.folder_id AS parent,[text] AS name,url,sort_key FROM [folder] f
 			JOIN [menu_has_folder] mhf ON mhf.folder_id=f.id
 			LEFT JOIN [name_has_text] nht ON f.name_id=nht.name_id AND language_id=%i
 			LEFT JOIN [text] t ON t.id=nht.text_id
-			WHERE menu_id=%i ORDER BY f.sort_key";
+			WHERE menu_id=%i ORDER BY f.folder_id";
 
 			$rows = $this->db->query($sql, $this->languageId, $menuId)->fetchAll();
 			foreach ($rows as $key => $row) {

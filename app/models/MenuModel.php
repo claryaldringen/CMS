@@ -38,17 +38,12 @@ class MenuModel extends BaseModel{
 	}
 
 	public function getMenuByUrl($url, $languageIds) {
-		foreach($languageIds as $languageId) {
-			$menu = $this->getMenu($languageId);
-			$result = $this->search($menu[0], explode('/', $url));
-			if(!empty($result)) {
-				$this->languageId = $languageId;
-				return $result;
-			}
-		}
+		$result = $this->searchInLanguages($languageIds, $url, FALSE);
+		if(empty($result)) $this->searchInLanguages($languageIds, $url, FALSE);
+		return $result;
 	}
 
-	private function search($menu, $urlParts) {
+	private function search($menu, $urlParts, $strict = TRUE) {
 		$result = array();
 		if(isset($menu['url'])) $urlPart = array_shift($urlParts);
 		if(!isset($menu['url']) || $menu['url'] == $urlPart) {
@@ -56,10 +51,10 @@ class MenuModel extends BaseModel{
 				$result = $menu;
 			} else {
 				foreach ($menu['items'] as $item) {
-					$result = $this->search($item, $urlParts);
+					$result = $this->search($item, $urlParts, $strict);
 					if (!empty($result)) break;
 				}
-				if(empty($result) && isset($menu['type_id']) && in_array($menu['type_id'], array(2,3,4))) {
+				if($strict && empty($result) && isset($menu['type_id']) && in_array($menu['type_id'], array(2,3,4))) {
 					$result = $menu;
 					$result['path'] = $urlParts;
 				}
@@ -67,6 +62,17 @@ class MenuModel extends BaseModel{
 		}
 
 		return $result;
+	}
+
+	private function searchInLanguages($languageIds, $url, $strict) {
+		foreach($languageIds as $languageId) {
+			$menu = $this->getMenu($languageId);
+			$result = $this->search($menu[0], explode('/', $url), $strict);
+			if(!empty($result)) {
+				$this->languageId = $languageId;
+				return $result;
+			}
+		}
 	}
 
 }
