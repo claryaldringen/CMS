@@ -39,7 +39,7 @@ class MenuModel extends BaseModel{
 
 	public function getMenuByUrl($url, $languageIds) {
 		$result = $this->searchInLanguages($languageIds, $url, FALSE);
-		if(empty($result)) $this->searchInLanguages($languageIds, $url, FALSE);
+		if(empty($result)) $result = $this->searchInLanguages($languageIds, $url, TRUE);
 		return $result;
 	}
 
