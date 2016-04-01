@@ -5,7 +5,7 @@ namespace cms;
 class AlbumModel extends BaseModel{
 
 	public function getAlbums($menuId) {
-		$sql = "SELECT a.id,text AS name,url,CONCAT(i.hash,'.',i.mime) AS file,year,price  FROM album a
+		$sql = "SELECT a.id,text AS name,url,CONCAT(i.hash,'.',i.mime) AS file,year,price,[count]  FROM album a
 			JOIN name_has_text nht ON nht.name_id=a.name_id AND nht.language_id=%i
 			JOIN text t ON t.id=nht.text_id
 			JOIN image i ON i.id=a.image_id
@@ -17,7 +17,7 @@ class AlbumModel extends BaseModel{
 
 	public function getAlbumByPath($url) {
 		$sql = "SELECT
-				a.id,t.text AS name,year,CONCAT(i.hash, '.', i.mime) AS file,link,t2.text
+				a.id,t.text AS name,year,[count],CONCAT(i.hash, '.', i.mime) AS file,link,t2.text
 			FROM album a
 			JOIN name_has_text nht ON nht.name_id=a.name_id AND nht.language_id=%i
 			JOIN text t ON t.id=nht.text_id
@@ -46,7 +46,7 @@ class AlbumModel extends BaseModel{
 
 		if(!is_array($ids)) $ids = array($ids);
 
-		$sql = "SELECT a.id,t.text AS name,year,CONCAT(i.hash, '.', i.mime) AS file,link,price FROM album a
+		$sql = "SELECT a.id,t.text AS name,year,[count],CONCAT(i.hash, '.', i.mime) AS file,link,price FROM album a
 			JOIN name_has_text nht ON nht.name_id=a.name_id AND nht.language_id=%i
 			JOIN text t ON t.id=nht.text_id
 			JOIN image i ON i.id=a.image_id

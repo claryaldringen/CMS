@@ -2,7 +2,7 @@
 
 namespace cms;
 
-use Tracy\Debugger;
+use Nette\Application\BadRequestException;
 
 class GalleryModel extends BaseModel{
 
@@ -48,6 +48,7 @@ class GalleryModel extends BaseModel{
 				$this->addImage($tree, $row->toArray());
 			}
 
+			if(empty($tree[0]['folders'])) throw new BadRequestException('Page not found', 404);
 			foreach($tree[0]['folders'] as &$folder) {
 				if(empty($folder['images'])) {
 					foreach($this->images as $imageId => $image) {
