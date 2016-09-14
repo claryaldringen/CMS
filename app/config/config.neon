@@ -1,4 +1,5 @@
 parameters:
+    isSinglePage: false
 
 php:
     date.timezone: Europe/Prague

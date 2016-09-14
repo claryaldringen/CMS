@@ -3,6 +3,7 @@
 namespace cms;
 
 use Nette\Application\BadRequestException;
+use Tracy\Debugger;
 
 class GalleryModel extends BaseModel{
 
@@ -14,10 +15,13 @@ class GalleryModel extends BaseModel{
 		if(!isset($this->gallery[$menuId])) {
 			$tree = $folderIds = array();
 
-			$sql = "SELECT f.id,f.folder_id AS parent,[text] AS name,url,sort_key FROM [folder] f
+			$sql = "SELECT f.id,f.folder_id AS parent,t.text AS [name],t.url,sort_key,t2.text FROM [folder] f
 			JOIN [menu_has_folder] mhf ON mhf.folder_id=f.id
 			LEFT JOIN [name_has_text] nht ON f.name_id=nht.name_id AND language_id=%i
 			LEFT JOIN [text] t ON t.id=nht.text_id
+			LEFT JOIN [folder_has_name] fhn ON fhn.folder_id=f.id
+			LEFT JOIN [name_has_text] nht2 ON nht2.name_id=fhn.name_id
+			LEFT JOIN [text] t2 ON t2.id=nht2.text_id
 			WHERE menu_id=%i ORDER BY f.folder_id";
 
 			$rows = $this->db->query($sql, $this->languageId, $menuId)->fetchAll();
@@ -48,15 +52,17 @@ class GalleryModel extends BaseModel{
 				$this->addImage($tree, $row->toArray());
 			}
 
-			if(empty($tree[0]['folders'])) throw new BadRequestException('Page not found', 404);
-			foreach($tree[0]['folders'] as &$folder) {
-				if(empty($folder['images'])) {
-					foreach($this->images as $imageId => $image) {
-						if(in_array($folder['id'],$image)) {
-							$image = $rows[$keys[$imageId]];
-							$image['temp'] = true;
-							$folder['images'] = array($image);
-							break;
+			if(empty($tree[0]['folders']) && empty($tree[0]['images'])) throw new BadRequestException('Page not found', 404);
+			if(!empty($tree[0]['folders'])) {
+				foreach ($tree[0]['folders'] as &$folder) {
+					if (empty($folder['images'])) {
+						foreach ($this->images as $imageId => $image) {
+							if (in_array($folder['id'], $image)) {
+								$image = $rows[$keys[$imageId]];
+								$image['temp'] = true;
+								$folder['images'] = array($image);
+								break;
+							}
 						}
 					}
 				}

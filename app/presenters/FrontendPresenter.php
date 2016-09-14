@@ -25,7 +25,8 @@ class FrontendPresenter extends UI\Presenter{
 	}
 
 	public function  actionAdmin() {
-		$this->context->getByType('Nette\Http\Response')->redirect('http://' . $this->context->parameters['adminHost'] . '/site/' . $this->context->parameters['siteId']);
+		$host = implode('.', array_slice(explode('.', $this->context->getByType('Nette\Http\Request')->getUrl()->host), -2));
+		$this->context->getByType('Nette\Http\Response')->redirect('http://admin.' . $host);
 	}
 
 	public function actionDownload($hash) {
@@ -63,8 +64,28 @@ class FrontendPresenter extends UI\Presenter{
 		return $item;
 	}
 
+	public function singlePageRender() {
+		$menuModel =  $this->context->getService('menuModel');
+		$menu = $menuModel->getMenu($this->languageId);
+		foreach($menu[0]['items'] as $item) {
+			if($item['visibility'] == 'visible') {
+				$this->renderContainers($item, NULL);
+			}
+		}
+
+		$this->template->isSinglePage = true;
+		$this->template->items = reset($menu);
+		$this->template->title = '';
+		$this->template->adminHost = $this->context->parameters['adminHost'];
+	}
+
 	public function renderDefault($url) {
-		$this->renderContainers($this->baseRender($url), $url);
+		$params = $this->context->getParameters();
+		if(!empty($params['isSinglePage'])) {
+			$this->singlePageRender();
+		} else {
+			$this->renderContainers($this->baseRender($url), $url);
+		}
 		$this->template->data = $this->data;
 	}
 
