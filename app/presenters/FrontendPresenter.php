@@ -2,6 +2,7 @@
 
 namespace cms;
 
+use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI;
 
@@ -114,6 +115,7 @@ class FrontendPresenter extends UI\Presenter{
 	protected function renderGallery($item, $url) {
 		if(empty($item['path'])) $item['path'] = array();
 		$data['folder'] = $this->context->getService('galleryModel')->setLanguage($this->languageId)->getFoldersByPath($item['id'], $item['path']);
+		if(empty($data['folder'])) throw new BadRequestException('Gallery not found.');
 		$data['url'] = $url;
 		$this->data[$item['id']] = $data;
 	}
