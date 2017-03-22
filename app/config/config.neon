@@ -1,34 +1,42 @@
+dibi:
+	host: localhost
+	username: root
+	password:
+	database: 318_cms
+	lazy: TRUE
+
 parameters:
-    isSinglePage: false
+	isSinglePage: false
+	adminHost: cms.freetech.cz
+	language: 36
 
 php:
-    date.timezone: Europe/Prague
-    # zlib.output_compression: yes
+	date.timezone: Europe/Prague
+	# zlib.output_compression: yes
 
-nette:
-    application:
-        catchExceptions: true
-        #errorPresenter: Error
+application:
+	catchExceptions: true
+		#errorPresenter: Error
 
-    session:
-        expiration: 14 days
+session:
+	expiration: 14 days
 
 services:
-    routerFactory: RouterFactory
-    router: @routerFactory::createRouter
-    library: cms\Library
-    menuModel: cms\MenuModel(@dibi.connection, @library, %siteId%)
-    pageModel: cms\PageModel(@dibi.connection)
-    galleryModel: cms\GalleryModel(@dibi.connection)
-    languageModel: cms\LanguageModel(@dibi.connection)
-    articleModel: cms\ArticleModel(@dibi.connection)
-    albumModel: cms\AlbumModel(@dibi.connection)
-    commentModel: cms\CommentModel(@dibi.connection, @library)
-    concertModel: cms\ConcertModel(@dibi.connection)
-    mailer: Nette\Mail\SendmailMailer
+	routerFactory: RouterFactory
+	router: @routerFactory::createRouter
+	library: cms\Library
+	menuModel: cms\MenuModel(@dibi.connection, @library, %siteId%)
+	pageModel: cms\PageModel(@dibi.connection)
+	galleryModel: cms\GalleryModel(@dibi.connection)
+	languageModel: cms\LanguageModel(@dibi.connection)
+	articleModel: cms\ArticleModel(@dibi.connection)
+	albumModel: cms\AlbumModel(@dibi.connection)
+	commentModel: cms\CommentModel(@dibi.connection, @library)
+	concertModel: cms\ConcertModel(@dibi.connection)
+	mailer: Nette\Mail\SendmailMailer
 
 extensions:
-    dibi: Dibi\Bridges\Nette\DibiExtension22
+	dibi: Dibi\Bridges\Nette\DibiExtension22
 
 tracy:
-    email: info@freetech.cz
+	email: info@freetech.cz
