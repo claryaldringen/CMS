@@ -16,7 +16,9 @@ php:
 
 application:
 	catchExceptions: true
-		#errorPresenter: Error
+	errorPresenter: Error
+	mapping:
+	    *: *Presenter
 
 session:
 	expiration: 14 days
