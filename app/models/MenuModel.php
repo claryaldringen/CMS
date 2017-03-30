@@ -43,6 +43,34 @@ class MenuModel extends BaseModel{
 		return $result;
 	}
 
+
+	public function getSitemap() {
+		$sql = "SELECT m.id,menu_id,url FROM menu m
+			JOIN name_has_text nht ON nht.name_id=m.name_id
+			JOIN text t ON t.id=nht.text_id
+			WHERE site_id=%i";
+
+		$rows = $this->db->query($sql, $this->siteId)->fetchAll();
+
+		$sitemap = ['' => 0];
+		$sitemap2 = [];
+
+		while($rows) {
+			foreach ($sitemap as $url => $id) {
+				foreach ($rows as $i => $row) {
+					if ($row->menu_id == $id) {
+						$sitemap2[$url . '/' . $row->url] = $row->id;
+						unset($rows[$i]);
+						unset($sitemap2[$url]);
+					}
+				}
+			}
+			$sitemap = $sitemap2;
+		}
+
+		return $sitemap;
+	}
+
 	private function search($menu, $urlParts, $strict = TRUE) {
 		$result = array();
 		if(isset($menu['url'])) $urlPart = array_shift($urlParts);
