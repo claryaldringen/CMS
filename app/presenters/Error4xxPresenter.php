@@ -8,11 +8,12 @@
 
 namespace cms;
 
+use Nette\Application\BadRequestException;
 use Nette\Application\UI;
 
 class Error4xxPresenter extends UI\Presenter{
 
-	public function renderDefault(Nette\Application\BadRequestException $exception) {
+	public function renderDefault(BadRequestException $exception) {
 		$this->template->code = $exception->getCode();
 	}
 

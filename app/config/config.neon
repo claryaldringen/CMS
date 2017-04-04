@@ -15,7 +15,7 @@ php:
 	# zlib.output_compression: yes
 
 application:
-	catchExceptions: true
+	catchExceptions: false
 	errorPresenter: Error
 	mapping:
 	    *: *Presenter

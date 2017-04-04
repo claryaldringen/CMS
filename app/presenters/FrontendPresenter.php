@@ -81,8 +81,6 @@ class FrontendPresenter extends UI\Presenter{
 	}
 
 	public function renderDefault($url) {
-		echo "FCUK";
-
 		$params = $this->context->getParameters();
 		if(!empty($params['isSinglePage'])) {
 			$this->singlePageRender();
@@ -146,7 +144,12 @@ class FrontendPresenter extends UI\Presenter{
 
 	public function renderSitemap() {
 		$this->template->host = $this->context->getByType('Nette\Http\Request')->getUrl()->hostUrl;
-		$this->template->sitemap = $this->context->getService('menuModel')->getSitemap();
+		$params = $this->context->getParameters();
+		if(empty($params['isSinglePage'])) {
+			$this->template->sitemap = $this->context->getService('menuModel')->getSitemap();
+		} else {
+			$this->template->sitemap = ['' => 0];
+		}
 	}
 
 }
