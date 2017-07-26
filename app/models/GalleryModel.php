@@ -36,7 +36,9 @@ class GalleryModel extends BaseModel{
 
 			$sql = "SELECT
 				i.id,
-				IF(type = 'general', i.hash, CONCAT(i.hash, '.jpg')) AS file,
+				IF(type = 'general', i.hash, CONCAT(i.hash, '.', i.mime)) AS file,
+				i.width,
+				i.height,
 				folder_id AS parent,[text] AS name,
 				type
 			FROM [image] i
